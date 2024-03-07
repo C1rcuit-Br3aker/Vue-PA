@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
+import { PropType } from 'vue';
 import { type PuppyData } from '../stores/app-data';
 
 const props = defineProps({
@@ -8,38 +8,29 @@ const props = defineProps({
     required: true,
   },
 });
-
-const puppyData = ref<PuppyData>();
-puppyData.value = props.pupData;
-console.log(puppyData.value.photoUrl);
-
-const picPath = puppyData.value.photoUrl;
-const pupName = puppyData.value.name;
-const pupAge = puppyData.value.age;
-const pupProfile = puppyData.value.profile;
 </script>
 <template>
   <div class="card">
     <div class="profile-image">
-      <img class="pup-pic" :src="picPath" />
+      <img class="pup-pic" :src="props.pupData.photoUrl" />
     </div>
     <form class="profile-card">
       <ul class="card-info">
         <li class="puppy-card-info">
           <p class="puppy-info">Name</p>
-          <input class="puppy-name" :value="pupName" />
+          <input class="puppy-name" :value="props.pupData.name" />
         </li>
         <li class="puppy-card-info">
           <p class="puppy-info">Age</p>
-          <input class="puppy-age" :value="pupAge" />
+          <input class="puppy-age" :value="props.pupData.age" />
         </li>
         <li class="puppy-card-info">
           <p class="puppy-info">Photo URL</p>
-          <input class="puppy-pic" :value="picPath" />
+          <input class="puppy-pic" :value="props.pupData.photoUrl" />
         </li>
         <li class="puppy-card-info">
           <p class="puppy-info">Profile</p>
-          <input class="puppy-profile" :value="pupProfile" />
+          <input class="puppy-profile" :value="props.pupData.profile" />
         </li>
       </ul>
       <div class="button-container">
