@@ -3,81 +3,29 @@ import { PropType, onMounted, ref } from 'vue';
 import { useAppData, type PuppyData } from '../stores/app-data';
 import { c } from 'vite/dist/node/types.d-AKzkD8vd';
 
-const props = defineProps({
-  pupData: {
-    type: Object as PropType<PuppyData>,
-    required: false,
-  },
-});
-
 const appData = useAppData();
 const pupName = ref('');
 const pupAge = ref('');
 const pupPic = ref('');
 const pupProfile = ref('');
-const inputsValid = ref(false);
 
-onMounted(() => {
-  pupName.value = props.pupData?.name || '';
-  pupAge.value = props.pupData?.age?.toString() || '';
-  pupPic.value = props.pupData?.photoUrl || '';
-  pupProfile.value = props.pupData?.profile || '';
-});
-
-function onSave(event: SubmitEvent) {
+async function onSave(event: SubmitEvent) {
   event.preventDefault();
-  validateInputs();
 
-  console.log(inputsValid.value);
+  const checkInputs = appData.validateInputs(
+    pupName.value,
+    pupAge.value,
+    pupPic.value,
+    pupProfile.value
+  );
+  if (!checkInputs) return;
+  const checkAge = appData.validateAge(pupAge.value);
+  if (!checkAge) return;
+  const checkUrl = await appData.validateImage(pupPic.value);
 
-  if (inputsValid.value) {
+  if (checkInputs && checkAge && checkUrl) {
     savePuppy();
   }
-}
-
-function validateInputs() {
-  inputsValid.value = true;
-  if (!pupName.value || !pupAge.value || !pupPic.value || !pupProfile.value) {
-    inputsValid.value = false;
-    alert('Please fill out all fields');
-    return;
-  }
-
-  const validAge = validateAge();
-  const validImage = validateImage();
-
-  if (!validAge || !validImage) {
-    inputsValid.value = false;
-  }
-}
-
-function validateAge(): boolean {
-  if (isNaN(parseInt(pupAge.value))) {
-    alert('Age must be a number');
-    return false;
-  }
-  return true;
-}
-
-async function validateImage(): Promise<boolean> {
-  let isValid = false;
-  const image = new Image();
-  image.src = pupPic.value;
-  await new Promise(() => {
-    image.onload = () => {
-      if (image.width > 0) {
-        isValid = true;
-      }
-    };
-
-    image.onerror = () => {
-      isValid = false;
-      console.log('error');
-      alert('Please enter a valid image URL');
-    };
-  });
-
-  return isValid;
 }
 
 function savePuppy() {

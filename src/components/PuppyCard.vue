@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
+import { PropType, onMounted, ref, watch } from 'vue';
 import { useAppData, type PuppyData } from '../stores/app-data';
 
 const appData = useAppData();
@@ -11,8 +11,56 @@ const props = defineProps({
   },
 });
 
+const nameInput = ref(<HTMLInputElement | null>null);
+const ageInput = ref(<HTMLInputElement | null>null);
+const imageInput = ref(<HTMLInputElement | null>null);
+const profileInput = ref(<HTMLTextAreaElement | null>null);
+
+onMounted(() => {
+  resizeTextArea();
+});
+
+watch(
+  () => props.pupData.profile,
+  () => {
+    resizeTextArea();
+  }
+);
+
+async function onUpdate() {
+  const checkInputs = appData.validateInputs(
+    nameInput.value?.value!,
+    ageInput.value?.value!,
+    imageInput.value?.value!,
+    profileInput.value?.value!
+  );
+  if (!checkInputs) return;
+  const checkAge = appData.validateAge(ageInput.value?.value!);
+  if (!checkAge) return;
+  const checkUrl = await appData.validateImage(imageInput.value?.value!);
+
+  if (checkInputs && checkAge && checkUrl) {
+    updatePuppy();
+  }
+}
+
+function updatePuppy() {
+  const newPupData: PuppyData = {
+    name: nameInput.value?.value!,
+    age: parseInt(ageInput.value?.value!),
+    photoUrl: imageInput.value?.value!,
+    profile: profileInput.value?.value!,
+  };
+  appData.updatePuppy(newPupData, props.pupData);
+}
+
 function removePupppy(pupData: PuppyData) {
   appData.removePuppy(pupData);
+}
+
+function resizeTextArea() {
+  const height = profileInput.value!.scrollHeight;
+  profileInput.value!.style.height = height + 'px';
 }
 </script>
 <template>
@@ -20,23 +68,37 @@ function removePupppy(pupData: PuppyData) {
     <div class="profile-image">
       <img class="pup-pic" :src="props.pupData.photoUrl" />
     </div>
-    <form class="profile-card">
+    <form class="profile-card" v-on:submit.prevent="onUpdate">
       <ul class="card-info">
         <li class="puppy-card-info">
           <p class="puppy-info">Name</p>
-          <input class="puppy-name" :value="props.pupData.name" />
+          <input
+            ref="nameInput"
+            class="puppy-name"
+            :value="props.pupData.name"
+          />
         </li>
         <li class="puppy-card-info">
           <p class="puppy-info">Age</p>
-          <input class="puppy-age" :value="props.pupData.age" />
+          <input ref="ageInput" class="puppy-age" :value="props.pupData.age" />
         </li>
         <li class="puppy-card-info">
           <p class="puppy-info">Photo URL</p>
-          <input class="puppy-pic" :value="props.pupData.photoUrl" />
+          <input
+            ref="imageInput"
+            class="puppy-pic"
+            :value="props.pupData.photoUrl"
+          />
         </li>
         <li class="puppy-card-info">
           <p class="puppy-info">Profile</p>
-          <input class="puppy-profile" :value="props.pupData.profile" />
+          <textarea
+            ref="profileInput"
+            v-model="props.pupData.profile"
+            class="puppy-profile"
+            @resize="onTextResize"
+            placeholder="Puppy does not have a profile yet."
+          />
         </li>
       </ul>
       <div class="button-container">

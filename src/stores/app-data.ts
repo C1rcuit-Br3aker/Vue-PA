@@ -47,10 +47,53 @@ export const useAppData = defineStore({
       const puppies = [puppy, ...this.puppies];
       this.puppies = puppies;
     },
+
+    updatePuppy(newPupData: PuppyData, oldPupData: PuppyData) {
+      const index = this.puppies.indexOf(oldPupData);
+      this.puppies[index] = newPupData;
+    },
+
     removePuppy(puppy: PuppyData) {
       const index = this.puppies.indexOf(puppy);
-      console.log(index);
       this.puppies.splice(index, 1);
+    },
+
+    validateInputs(
+      name: string,
+      age: string,
+      imageUrl: string,
+      profile: string
+    ): boolean {
+      let inputsValid = true;
+
+      if (!name || !age || !imageUrl || !profile) {
+        inputsValid = false;
+        alert('Please fill out all fields');
+        return false;
+      }
+
+      return inputsValid;
+    },
+
+    validateAge(age: string): boolean {
+      if (isNaN(parseInt(age.toString()))) {
+        alert('Age must be a number');
+        return false;
+      }
+      return true;
+    },
+
+    async validateImage(imageUrl: string): Promise<boolean> {
+      const image = new Image();
+      image.src = imageUrl;
+      return new Promise((resolve) => {
+        image.onload = () => {
+          resolve(true);
+        };
+        image.onerror = () => {
+          resolve(false);
+        };
+      });
     },
   },
 });
