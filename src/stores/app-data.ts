@@ -47,6 +47,13 @@ export const useAppData = defineStore({
       const puppies = [puppy, ...this.puppies];
       this.puppies = puppies;
     },
+
+    updatePuppy(newPupData: PuppyData, oldPupData: number) {
+      // const index = this.puppies.indexOf(oldPupData);
+      this.puppies.splice(this.puppies.indexOf(oldPupData), 1, newPupData);
+      // this.puppies[index] = newPupData;
+    },
+
     removePuppy(puppy: PuppyData) {
       const index = this.puppies.indexOf(puppy);
       console.log(index);

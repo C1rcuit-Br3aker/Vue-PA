@@ -3,26 +3,12 @@ import { PropType, onMounted, ref } from 'vue';
 import { useAppData, type PuppyData } from '../stores/app-data';
 import { c } from 'vite/dist/node/types.d-AKzkD8vd';
 
-const props = defineProps({
-  pupData: {
-    type: Object as PropType<PuppyData>,
-    required: false,
-  },
-});
-
 const appData = useAppData();
 const pupName = ref('');
 const pupAge = ref('');
 const pupPic = ref('');
 const pupProfile = ref('');
 const inputsValid = ref(false);
-
-onMounted(() => {
-  pupName.value = props.pupData?.name || '';
-  pupAge.value = props.pupData?.age?.toString() || '';
-  pupPic.value = props.pupData?.photoUrl || '';
-  pupProfile.value = props.pupData?.profile || '';
-});
 
 function onSave(event: SubmitEvent) {
   event.preventDefault();

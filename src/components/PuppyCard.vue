@@ -11,6 +11,10 @@ const props = defineProps({
   },
 });
 
+function onUpdate() {
+  console.log('update');
+}
+
 function removePupppy(pupData: PuppyData) {
   appData.removePuppy(pupData);
 }
@@ -20,7 +24,7 @@ function removePupppy(pupData: PuppyData) {
     <div class="profile-image">
       <img class="pup-pic" :src="props.pupData.photoUrl" />
     </div>
-    <form class="profile-card">
+    <form class="profile-card" v-on:submit.prevent="onUpdate">
       <ul class="card-info">
         <li class="puppy-card-info">
           <p class="puppy-info">Name</p>
