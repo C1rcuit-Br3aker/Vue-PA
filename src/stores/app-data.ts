@@ -50,21 +50,6 @@ export const useAppData = defineStore({
 
     updatePuppy(newPupData: PuppyData, oldPupData: PuppyData) {
       const index = this.puppies.indexOf(oldPupData);
-      console.log(
-        'newPupData',
-        newPupData.name,
-        newPupData.age,
-        newPupData.photoUrl,
-        newPupData.profile
-      );
-      console.log(
-        'oldPupData',
-        oldPupData.name,
-        oldPupData.age,
-        oldPupData.photoUrl,
-        oldPupData.profile
-      );
-      // this.puppies.splice(this.puppies.indexOf(oldPupData), 1, newPupData);
       this.puppies[index] = newPupData;
     },
 

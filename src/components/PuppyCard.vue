@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
+import { PropType, onMounted, ref, watch } from 'vue';
 import { useAppData, type PuppyData } from '../stores/app-data';
 
 const appData = useAppData();
@@ -14,30 +14,36 @@ const props = defineProps({
 const nameInput = ref(<HTMLInputElement | null>null);
 const ageInput = ref(<HTMLInputElement | null>null);
 const imageInput = ref(<HTMLInputElement | null>null);
-const profileInput = ref(<HTMLInputElement | null>null);
+const profileInput = ref(<HTMLTextAreaElement | null>null);
+
+onMounted(() => {
+  resizeTextArea();
+});
+
+watch(
+  () => props.pupData.profile,
+  () => {
+    resizeTextArea();
+  }
+);
 
 function onUpdate() {
-  console.log('updating puppy');
   const newPupData: PuppyData = {
     name: nameInput.value?.value!,
     age: parseInt(ageInput.value?.value!),
     photoUrl: imageInput.value?.value!,
     profile: profileInput.value?.value!,
   };
-
-  console.log(
-    'newPupData',
-    newPupData.name,
-    newPupData.age,
-    newPupData.photoUrl,
-    newPupData.profile
-  );
-
   appData.updatePuppy(newPupData, props.pupData);
 }
 
 function removePupppy(pupData: PuppyData) {
   appData.removePuppy(pupData);
+}
+
+function resizeTextArea() {
+  const height = profileInput.value!.scrollHeight;
+  profileInput.value!.style.height = height + 'px';
 }
 </script>
 <template>
@@ -69,10 +75,11 @@ function removePupppy(pupData: PuppyData) {
         </li>
         <li class="puppy-card-info">
           <p class="puppy-info">Profile</p>
-          <input
+          <textarea
             ref="profileInput"
+            v-model="props.pupData.profile"
             class="puppy-profile"
-            :value="props.pupData.profile"
+            @resize="onTextResize"
           />
         </li>
       </ul>
