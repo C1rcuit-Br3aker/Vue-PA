@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { PropType } from 'vue';
-import { type PuppyData } from '../stores/app-data';
+import { useAppData, type PuppyData } from '../stores/app-data';
+
+const appData = useAppData();
 
 const props = defineProps({
   pupData: {
@@ -8,6 +10,10 @@ const props = defineProps({
     required: true,
   },
 });
+
+function removePupppy(pupData: PuppyData) {
+  appData.removePuppy(pupData);
+}
 </script>
 <template>
   <div class="card">
@@ -34,7 +40,7 @@ const props = defineProps({
         </li>
       </ul>
       <div class="button-container">
-        <a class="btn delete">Delete</a>
+        <a class="btn delete" @click="removePupppy(props.pupData)">Delete</a>
         <button class="btn update">Update</button>
       </div>
     </form>

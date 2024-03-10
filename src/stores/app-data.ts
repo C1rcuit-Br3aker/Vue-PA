@@ -39,11 +39,25 @@ export const useAppData = defineStore({
         profile: 'Lucy is a very good',
       },
     ],
+    active: false,
   }),
+
+  actions: {
+    addPuppy(puppy: PuppyData) {
+      const puppies = [puppy, ...this.puppies];
+      this.puppies = puppies;
+    },
+    removePuppy(puppy: PuppyData) {
+      const index = this.puppies.indexOf(puppy);
+      console.log(index);
+      this.puppies.splice(index, 1);
+    },
+  },
 });
 
 export type AppData = {
   puppies: PuppyData[];
+  active: boolean;
 };
 
 export type PuppyData = {

@@ -1,9 +1,20 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useAppData } from '../stores/app-data';
+
+const appData = useAppData();
+
+function dropDownSelected() {
+  appData.active = !appData.active;
+}
+</script>
 <template>
   <div class="top-nav">
     <div class="top-nav-content">
       <h1 class="form-title">Puppies</h1>
-      <button class="dropdown-button fa fa-plus-circle"></button>
+      <button
+        class="dropdown-button fa fa-plus-circle"
+        @click="dropDownSelected"
+      ></button>
     </div>
   </div>
 </template>

@@ -15,7 +15,7 @@ puppies.value = appData.puppies;
 <template>
   <div id="content">
     <Header></Header>
-    <AdoptForm></AdoptForm>
+    <AdoptForm v-if="appData.active"></AdoptForm>
     <PuppyCard
       v-for="(puppy, index) in appData.puppies"
       :key="index"
