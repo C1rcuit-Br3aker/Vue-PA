@@ -44,7 +44,6 @@ export const useAppData = defineStore({
 
   actions: {
     addPuppy(puppy: PuppyData) {
-      console.log('adding puppy');
       const puppies = [puppy, ...this.puppies];
       this.puppies = puppies;
     },
@@ -56,7 +55,6 @@ export const useAppData = defineStore({
 
     removePuppy(puppy: PuppyData) {
       const index = this.puppies.indexOf(puppy);
-      console.log(index);
       this.puppies.splice(index, 1);
     },
 
@@ -86,16 +84,13 @@ export const useAppData = defineStore({
     },
 
     async validateImage(imageUrl: string): Promise<boolean> {
-      console.log('validating image');
       const image = new Image();
       image.src = imageUrl;
       return new Promise((resolve) => {
         image.onload = () => {
-          console.log('image loaded');
           resolve(true);
         };
         image.onerror = () => {
-          console.log('image error');
           resolve(false);
         };
       });

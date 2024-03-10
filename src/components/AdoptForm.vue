@@ -20,14 +20,10 @@ async function onSave(event: SubmitEvent) {
   );
   if (!checkInputs) return;
   const checkAge = appData.validateAge(pupAge.value);
-  console.log('checkAge', checkAge);
   if (!checkAge) return;
-  console.log('checking url');
   const checkUrl = await appData.validateImage(pupPic.value);
-  console.log('checkUrl', checkUrl);
 
   if (checkInputs && checkAge && checkUrl) {
-    console.log('All checks passed');
     savePuppy();
   }
 }

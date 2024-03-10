@@ -36,14 +36,10 @@ async function onUpdate() {
   );
   if (!checkInputs) return;
   const checkAge = appData.validateAge(ageInput.value?.value!);
-  console.log('checkAge', checkAge);
   if (!checkAge) return;
-  console.log('checking url');
   const checkUrl = await appData.validateImage(imageInput.value?.value!);
-  console.log('checkUrl', checkUrl);
 
   if (checkInputs && checkAge && checkUrl) {
-    console.log('All checks passed');
     updatePuppy();
   }
 }
