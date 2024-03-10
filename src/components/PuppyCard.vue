@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
+import { PropType, ref } from 'vue';
 import { useAppData, type PuppyData } from '../stores/app-data';
 
 const appData = useAppData();
@@ -11,8 +11,29 @@ const props = defineProps({
   },
 });
 
+const nameInput = ref(<HTMLInputElement | null>null);
+const ageInput = ref(<HTMLInputElement | null>null);
+const imageInput = ref(<HTMLInputElement | null>null);
+const profileInput = ref(<HTMLInputElement | null>null);
+
 function onUpdate() {
-  console.log('update');
+  console.log('updating puppy');
+  const newPupData: PuppyData = {
+    name: nameInput.value?.value!,
+    age: parseInt(ageInput.value?.value!),
+    photoUrl: imageInput.value?.value!,
+    profile: profileInput.value?.value!,
+  };
+
+  console.log(
+    'newPupData',
+    newPupData.name,
+    newPupData.age,
+    newPupData.photoUrl,
+    newPupData.profile
+  );
+
+  appData.updatePuppy(newPupData, props.pupData);
 }
 
 function removePupppy(pupData: PuppyData) {
@@ -28,19 +49,31 @@ function removePupppy(pupData: PuppyData) {
       <ul class="card-info">
         <li class="puppy-card-info">
           <p class="puppy-info">Name</p>
-          <input class="puppy-name" :value="props.pupData.name" />
+          <input
+            ref="nameInput"
+            class="puppy-name"
+            :value="props.pupData.name"
+          />
         </li>
         <li class="puppy-card-info">
           <p class="puppy-info">Age</p>
-          <input class="puppy-age" :value="props.pupData.age" />
+          <input ref="ageInput" class="puppy-age" :value="props.pupData.age" />
         </li>
         <li class="puppy-card-info">
           <p class="puppy-info">Photo URL</p>
-          <input class="puppy-pic" :value="props.pupData.photoUrl" />
+          <input
+            ref="imageInput"
+            class="puppy-pic"
+            :value="props.pupData.photoUrl"
+          />
         </li>
         <li class="puppy-card-info">
           <p class="puppy-info">Profile</p>
-          <input class="puppy-profile" :value="props.pupData.profile" />
+          <input
+            ref="profileInput"
+            class="puppy-profile"
+            :value="props.pupData.profile"
+          />
         </li>
       </ul>
       <div class="button-container">
