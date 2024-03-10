@@ -8,62 +8,28 @@ const pupName = ref('');
 const pupAge = ref('');
 const pupPic = ref('');
 const pupProfile = ref('');
-const inputsValid = ref(false);
 
-function onSave(event: SubmitEvent) {
+async function onSave(event: SubmitEvent) {
   event.preventDefault();
-  validateInputs();
 
-  console.log(inputsValid.value);
+  const checkInputs = appData.validateInputs(
+    pupName.value,
+    pupAge.value,
+    pupPic.value,
+    pupProfile.value
+  );
+  if (!checkInputs) return;
+  const checkAge = appData.validateAge(pupAge.value);
+  console.log('checkAge', checkAge);
+  if (!checkAge) return;
+  console.log('checking url');
+  const checkUrl = await appData.validateImage(pupPic.value);
+  console.log('checkUrl', checkUrl);
 
-  if (inputsValid.value) {
+  if (checkInputs && checkAge && checkUrl) {
+    console.log('All checks passed');
     savePuppy();
   }
-}
-
-function validateInputs() {
-  inputsValid.value = true;
-  if (!pupName.value || !pupAge.value || !pupPic.value || !pupProfile.value) {
-    inputsValid.value = false;
-    alert('Please fill out all fields');
-    return;
-  }
-
-  const validAge = validateAge();
-  const validImage = validateImage();
-
-  if (!validAge || !validImage) {
-    inputsValid.value = false;
-  }
-}
-
-function validateAge(): boolean {
-  if (isNaN(parseInt(pupAge.value))) {
-    alert('Age must be a number');
-    return false;
-  }
-  return true;
-}
-
-async function validateImage(): Promise<boolean> {
-  let isValid = false;
-  const image = new Image();
-  image.src = pupPic.value;
-  await new Promise(() => {
-    image.onload = () => {
-      if (image.width > 0) {
-        isValid = true;
-      }
-    };
-
-    image.onerror = () => {
-      isValid = false;
-      console.log('error');
-      alert('Please enter a valid image URL');
-    };
-  });
-
-  return isValid;
 }
 
 function savePuppy() {

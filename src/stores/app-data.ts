@@ -44,6 +44,7 @@ export const useAppData = defineStore({
 
   actions: {
     addPuppy(puppy: PuppyData) {
+      console.log('adding puppy');
       const puppies = [puppy, ...this.puppies];
       this.puppies = puppies;
     },
@@ -57,6 +58,47 @@ export const useAppData = defineStore({
       const index = this.puppies.indexOf(puppy);
       console.log(index);
       this.puppies.splice(index, 1);
+    },
+
+    validateInputs(
+      name: string,
+      age: string,
+      imageUrl: string,
+      profile: string
+    ): boolean {
+      let inputsValid = true;
+
+      if (!name || !age || !imageUrl || !profile) {
+        inputsValid = false;
+        alert('Please fill out all fields');
+        return false;
+      }
+
+      return inputsValid;
+    },
+
+    validateAge(age: string): boolean {
+      if (isNaN(parseInt(age.toString()))) {
+        alert('Age must be a number');
+        return false;
+      }
+      return true;
+    },
+
+    async validateImage(imageUrl: string): Promise<boolean> {
+      console.log('validating image');
+      const image = new Image();
+      image.src = imageUrl;
+      return new Promise((resolve) => {
+        image.onload = () => {
+          console.log('image loaded');
+          resolve(true);
+        };
+        image.onerror = () => {
+          console.log('image error');
+          resolve(false);
+        };
+      });
     },
   },
 });

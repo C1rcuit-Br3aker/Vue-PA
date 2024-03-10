@@ -27,7 +27,28 @@ watch(
   }
 );
 
-function onUpdate() {
+async function onUpdate() {
+  const checkInputs = appData.validateInputs(
+    nameInput.value?.value!,
+    ageInput.value?.value!,
+    imageInput.value?.value!,
+    profileInput.value?.value!
+  );
+  if (!checkInputs) return;
+  const checkAge = appData.validateAge(ageInput.value?.value!);
+  console.log('checkAge', checkAge);
+  if (!checkAge) return;
+  console.log('checking url');
+  const checkUrl = await appData.validateImage(imageInput.value?.value!);
+  console.log('checkUrl', checkUrl);
+
+  if (checkInputs && checkAge && checkUrl) {
+    console.log('All checks passed');
+    updatePuppy();
+  }
+}
+
+function updatePuppy() {
   const newPupData: PuppyData = {
     name: nameInput.value?.value!,
     age: parseInt(ageInput.value?.value!),
@@ -80,6 +101,7 @@ function resizeTextArea() {
             v-model="props.pupData.profile"
             class="puppy-profile"
             @resize="onTextResize"
+            placeholder="Puppy does not have a profile yet."
           />
         </li>
       </ul>
